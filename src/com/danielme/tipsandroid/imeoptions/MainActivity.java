@@ -27,70 +27,53 @@ public class MainActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
 		EditText sendEditText = (EditText) findViewById(R.id.editText1);
-		
-		//set focus and show keyboard
+
+		// set focus and show keyboard
 		sendEditText.requestFocus();
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-		
-		sendEditText.setOnEditorActionListener(new OnEditorActionListener() {
-			@Override
-			public boolean onEditorAction(TextView textView, int actionId, KeyEvent event)
-			{
-				boolean action = false;
-				if (actionId == EditorInfo.IME_ACTION_SEND)
-				{
-					// hide keyboard
-					InputMethodManager inputMethodManager = (InputMethodManager) textView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-					inputMethodManager.hideSoftInputFromWindow(textView.getWindowToken(), 0);
-
-					Toast.makeText(MainActivity.this, R.string.send, Toast.LENGTH_SHORT).show();
-					action = true;
-				}
-				return action; 
-			}
-		});
-		
+ 
+		sendEditText.setOnEditorActionListener(new MainActivityOnEditorActionListener());			
 		EditText searchEditText = (EditText) findViewById(R.id.editText2);
-		searchEditText.setOnEditorActionListener(new OnEditorActionListener()
-		{
-			@Override
-			public boolean onEditorAction(TextView textView, int actionId, KeyEvent event)
-			{
-				boolean action = false;
-				if (actionId == EditorInfo.IME_ACTION_SEARCH)
-				{
-					//hide keyboard
-					InputMethodManager inputMethodManager = (InputMethodManager) textView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-					inputMethodManager.hideSoftInputFromWindow(textView.getWindowToken(), 0);
-					
-					Toast.makeText(MainActivity.this, R.string.search, Toast.LENGTH_SHORT).show();
-					action = true;
-				}
-				return action;
-			}
-		});		
-		
+		searchEditText.setOnEditorActionListener(new MainActivityOnEditorActionListener());
 		EditText customEditText = (EditText) findViewById(R.id.editText3);
-		customEditText.setOnEditorActionListener(new OnEditorActionListener()
+		customEditText.setOnEditorActionListener(new MainActivityOnEditorActionListener());		
+
+	}
+
+	class MainActivityOnEditorActionListener implements OnEditorActionListener
+	{
+		@Override
+		public boolean onEditorAction(TextView textView, int actionId, KeyEvent event)
 		{
-			@Override
-			public boolean onEditorAction(TextView textView, int actionId, KeyEvent event)
+			boolean action = false;
+			int stringId = -1;
+			switch (actionId)
 			{
-				boolean action = false;
-				if (actionId == R.id.action_custom || actionId == EditorInfo.IME_ACTION_UNSPECIFIED)
-				{
-					//hide keyboard
-					InputMethodManager inputMethodManager = (InputMethodManager) textView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-					inputMethodManager.hideSoftInputFromWindow(textView.getWindowToken(), 0);
-					
-					Toast.makeText(MainActivity.this, R.string.custom, Toast.LENGTH_SHORT).show();
-					action = true;
-				}
-				return action;
+				case EditorInfo.IME_ACTION_SEND:
+					stringId = R.string.send;
+					break;
+				case EditorInfo.IME_ACTION_SEARCH:
+					stringId = R.string.search;
+					break;
+				case R.id.action_custom:
+				case EditorInfo.IME_ACTION_UNSPECIFIED:
+					stringId = R.string.custom;
+					break;
+				default:
+					break;
 			}
-		});		
+			if (stringId != -1)
+			{
+				// hide keyboard
+				InputMethodManager inputMethodManager = (InputMethodManager) textView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+				inputMethodManager.hideSoftInputFromWindow(textView.getWindowToken(), 0);
+
+				Toast.makeText(MainActivity.this, stringId, Toast.LENGTH_SHORT).show();
+				action = true;
+			}
+			return action;
+		}
 
 	}
 }
