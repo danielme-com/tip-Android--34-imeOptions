@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ime Options - danielme.com</string>
+    <string name="send">send</string>
+    <string name="search">search</string>    
+    <string name="custom">custom</string> 
+</resources>
